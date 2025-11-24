@@ -28,7 +28,7 @@ export type Product = {
 };
 
 export function buildZodSchemaForCategory(cat: CategoryDefinition): z.ZodObject {
-    const shape: Record<string, ZodType> = {};
+    const propertiesShape: Record<string, ZodType> = {};
 
     for (const prop of cat.properties) {
         let schema: ZodType;
@@ -64,8 +64,13 @@ export function buildZodSchemaForCategory(cat: CategoryDefinition): z.ZodObject 
             schema = schema.optional();
         }
 
-        shape[prop.key] = schema;
+        propertiesShape[prop.key] = schema;
     }
 
-    return z.object(shape);
+    return z.object({
+        id: z.string(),
+        name: z.string(),
+        categoryId: z.string(),
+        properties: z.object(propertiesShape),
+    });
 }

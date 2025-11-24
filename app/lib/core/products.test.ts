@@ -21,16 +21,39 @@ describe("buildZodSchemaForCategory", () => {
         const schema = buildZodSchemaForCategory(category);
 
         // Valid data
-        expect(schema.safeParse({ width: 50 }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { width: 50 } 
+        }).success).toBe(true);
 
         // Below minimum
-        expect(schema.safeParse({ width: 5 }).success).toBe(false);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { width: 5 } 
+        }).success).toBe(false);
 
         // Above maximum
-        expect(schema.safeParse({ width: 150 }).success).toBe(false);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { width: 150 } 
+        }).success).toBe(false);
 
-        // Missing required field
-        expect(schema.safeParse({}).success).toBe(false);
+        // Missing required field in properties
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: {} 
+        }).success).toBe(false);
+
+        // Missing mandatory Product fields
+        expect(schema.safeParse({ properties: { width: 50 } }).success).toBe(false);
     });
 
     it("should create a schema for a category with boolean properties", () => {
@@ -50,15 +73,40 @@ describe("buildZodSchemaForCategory", () => {
         const schema = buildZodSchemaForCategory(category);
 
         // Valid boolean values
-        expect(schema.safeParse({ enabled: true }).success).toBe(true);
-        expect(schema.safeParse({ enabled: false }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { enabled: true } 
+        }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { enabled: false } 
+        }).success).toBe(true);
 
         // Invalid types
-        expect(schema.safeParse({ enabled: "true" }).success).toBe(false);
-        expect(schema.safeParse({ enabled: 1 }).success).toBe(false);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { enabled: "true" } 
+        }).success).toBe(false);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { enabled: 1 } 
+        }).success).toBe(false);
 
-        // Missing required field
-        expect(schema.safeParse({}).success).toBe(false);
+        // Missing required field in properties
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: {} 
+        }).success).toBe(false);
     });
 
     it("should create a schema for a category with enum properties", () => {
@@ -79,15 +127,40 @@ describe("buildZodSchemaForCategory", () => {
         const schema = buildZodSchemaForCategory(category);
 
         // Valid enum values
-        expect(schema.safeParse({ color: "red" }).success).toBe(true);
-        expect(schema.safeParse({ color: "green" }).success).toBe(true);
-        expect(schema.safeParse({ color: "blue" }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { color: "red" } 
+        }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { color: "green" } 
+        }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { color: "blue" } 
+        }).success).toBe(true);
 
         // Invalid enum value
-        expect(schema.safeParse({ color: "yellow" }).success).toBe(false);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { color: "yellow" } 
+        }).success).toBe(false);
 
-        // Missing required field
-        expect(schema.safeParse({}).success).toBe(false);
+        // Missing required field in properties
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: {} 
+        }).success).toBe(false);
     });
 
     it("should make properties optional when required is false", () => {
@@ -107,10 +180,20 @@ describe("buildZodSchemaForCategory", () => {
         const schema = buildZodSchemaForCategory(category);
 
         // Should accept missing optional field
-        expect(schema.safeParse({}).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: {} 
+        }).success).toBe(true);
 
         // Should also accept valid value
-        expect(schema.safeParse({ optionalNumber: 42 }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { optionalNumber: 42 } 
+        }).success).toBe(true);
     });
 
     it("should make properties optional when required is undefined", () => {
@@ -129,7 +212,12 @@ describe("buildZodSchemaForCategory", () => {
         const schema = buildZodSchemaForCategory(category);
 
         // Should accept missing field when required is not specified
-        expect(schema.safeParse({}).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: {} 
+        }).success).toBe(true);
     });
 
     it("should handle multiple properties of different kinds", () => {
@@ -166,33 +254,53 @@ describe("buildZodSchemaForCategory", () => {
         // Valid complete data
         expect(
             schema.safeParse({
-                sizeCm: 100,
-                inStock: true,
-                material: "wood",
+                id: "prod-1",
+                name: "Product 1",
+                categoryId: "product-category",
+                properties: {
+                    sizeCm: 100,
+                    inStock: true,
+                    material: "wood",
+                },
             }).success
         ).toBe(true);
 
         // Valid without optional field
         expect(
             schema.safeParse({
-                sizeCm: 100,
-                inStock: true,
+                id: "prod-1",
+                name: "Product 1",
+                categoryId: "product-category",
+                properties: {
+                    sizeCm: 100,
+                    inStock: true,
+                },
             }).success
         ).toBe(true);
 
         // Missing required field
         expect(
             schema.safeParse({
-                sizeCm: 100,
+                id: "prod-1",
+                name: "Product 1",
+                categoryId: "product-category",
+                properties: {
+                    sizeCm: 100,
+                },
             }).success
         ).toBe(false);
 
         // Invalid enum value
         expect(
             schema.safeParse({
-                sizeCm: 100,
-                inStock: true,
-                material: "glass",
+                id: "prod-1",
+                name: "Product 1",
+                categoryId: "product-category",
+                properties: {
+                    sizeCm: 100,
+                    inStock: true,
+                    material: "glass",
+                },
             }).success
         ).toBe(false);
     });
@@ -214,9 +322,24 @@ describe("buildZodSchemaForCategory", () => {
         const schema = buildZodSchemaForCategory(category);
 
         // Should accept any number
-        expect(schema.safeParse({ quantity: -1000 }).success).toBe(true);
-        expect(schema.safeParse({ quantity: 0 }).success).toBe(true);
-        expect(schema.safeParse({ quantity: 999999 }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { quantity: -1000 } 
+        }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { quantity: 0 } 
+        }).success).toBe(true);
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "test-category", 
+            properties: { quantity: 999999 } 
+        }).success).toBe(true);
     });
 
     it("should throw error for enum without enumValues", () => {
@@ -267,7 +390,12 @@ describe("buildZodSchemaForCategory", () => {
 
         const schema = buildZodSchemaForCategory(category);
 
-        // Should accept empty object
-        expect(schema.safeParse({}).success).toBe(true);
+        // Should accept Product with empty properties object
+        expect(schema.safeParse({ 
+            id: "prod-1", 
+            name: "Product 1", 
+            categoryId: "empty-category", 
+            properties: {} 
+        }).success).toBe(true);
     });
 });
