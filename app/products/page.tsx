@@ -8,7 +8,8 @@ type ProductListItem = {
 };
 
 async function getProducts(): Promise<ProductListItem[]> {
-  const res = await fetch("http://localhost:3000/api/products", {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/products`, {
     cache: "no-store",
   });
 
