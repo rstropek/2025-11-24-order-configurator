@@ -1,3 +1,8 @@
 import { describe, expect, test } from 'vitest'
 
-// Here we will add tests
+// Add a sample test
+describe('Sample Test Suite', () => {
+  test('should pass this sample test', () => {
+    expect(1 + 1).toBe(2)
+  })
+})

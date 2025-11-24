@@ -1,5 +1,71 @@
 import { z, ZodType } from "zod";
 
-// Here we will add our core application data model
+export type PropertyKind = "number" | "boolean" | "enum";
 
-// Here will will add zod-related code
+export type PropertyDefinition = {
+    key: string;                 // e.g. "sizeCm"
+    label: string;               // UI label
+    kind: PropertyKind;          // "number" | "boolean" | "enum"
+    required?: boolean;
+
+    // optional constraints, depending on kind:
+    min?: number;
+    max?: number;
+    enumValues?: string[];
+}
+
+export type CategoryDefinition = {
+    id: string;
+    name: string;
+    properties: PropertyDefinition[];
+};
+
+export type Product = {
+    id: string;
+    name: string;
+    categoryId: string;
+    properties: Record<string, unknown>;
+};
+
+export function buildZodSchemaForCategory(cat: CategoryDefinition): z.ZodObject {
+    const shape: Record<string, ZodType> = {};
+
+    for (const prop of cat.properties) {
+        let schema: ZodType;
+
+        switch (prop.kind) {
+            case "number":
+                schema = z.number();
+                if (prop.min !== undefined) {
+                    schema = (schema as z.ZodNumber).min(prop.min);
+                }
+                if (prop.max !== undefined) {
+                    schema = (schema as z.ZodNumber).max(prop.max);
+                }
+                break;
+
+            case "boolean":
+                schema = z.boolean();
+                break;
+
+            case "enum":
+                if (!prop.enumValues || prop.enumValues.length === 0) {
+                    throw new Error(`Property ${prop.key} is of kind 'enum' but has no enumValues`);
+                }
+                schema = z.enum(prop.enumValues as [string, ...string[]]);
+                break;
+
+            default:
+                throw new Error(`Unknown property kind: ${prop.kind}`);
+        }
+
+        // Make optional if not required
+        if (!prop.required) {
+            schema = schema.optional();
+        }
+
+        shape[prop.key] = schema;
+    }
+
+    return z.object(shape);
+}
