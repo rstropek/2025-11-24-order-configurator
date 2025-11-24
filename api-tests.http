@@ -1,0 +1,197 @@
+### Product Management API Tests
+### Assumes the database contains sample data from sampleData.ts
+
+@baseUrl = http://localhost:3000
+
+### 1. GET all products (without properties and dependencies)
+GET {{baseUrl}}/api/products
+Content-Type: application/json
+
+### 2. GET specific product by ID - Modern Platform 200
+GET {{baseUrl}}/api/products/platform-modern-200
+Content-Type: application/json
+
+### 3. GET specific product by ID - AutoClamp 10
+GET {{baseUrl}}/api/products/clamp-auto-10
+Content-Type: application/json
+
+### 4. GET specific product by ID - Basic Controller
+GET {{baseUrl}}/api/products/controller-basic-4
+Content-Type: application/json
+
+### 5. GET non-existent product (should return 404)
+GET {{baseUrl}}/api/products/non-existent-product
+Content-Type: application/json
+
+### 6. POST validate order - Valid order with Modern Platform
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-modern-200",
+      "quantity": 1
+    },
+    {
+      "productId": "clamp-auto-10",
+      "quantity": 4
+    },
+    {
+      "productId": "controller-pro-8",
+      "quantity": 1
+    }
+  ]
+}
+
+### 7. POST validate order - Valid order with Compact Platform
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-compact-120",
+      "quantity": 1
+    },
+    {
+      "productId": "clamp-manual-5",
+      "quantity": 2
+    },
+    {
+      "productId": "controller-basic-4",
+      "quantity": 1
+    }
+  ]
+}
+
+### 8. POST validate order - Invalid: Modern Platform without enough clamps
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-modern-200",
+      "quantity": 1
+    },
+    {
+      "productId": "clamp-auto-10",
+      "quantity": 2
+    },
+    {
+      "productId": "controller-pro-8",
+      "quantity": 1
+    }
+  ]
+}
+
+### 9. POST validate order - Invalid: AutoClamp without controller that supports it
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "clamp-auto-10",
+      "quantity": 4
+    },
+    {
+      "productId": "controller-basic-4",
+      "quantity": 1
+    }
+  ]
+}
+
+### 10. POST validate order - Invalid: Clamps too small for Modern Platform
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-modern-200",
+      "quantity": 1
+    },
+    {
+      "productId": "clamp-manual-5",
+      "quantity": 4
+    },
+    {
+      "productId": "controller-basic-4",
+      "quantity": 1
+    }
+  ]
+}
+
+### 11. POST validate order - Invalid: Controller without enough channels
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-modern-200",
+      "quantity": 1
+    },
+    {
+      "productId": "clamp-manual-5",
+      "quantity": 10
+    },
+    {
+      "productId": "controller-basic-4",
+      "quantity": 1
+    }
+  ]
+}
+
+### 12. POST validate order - Invalid: Product not found
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "non-existent-product",
+      "quantity": 1
+    }
+  ]
+}
+
+### 13. POST validate order - Invalid: Zero quantity
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-modern-200",
+      "quantity": 0
+    }
+  ]
+}
+
+### 14. POST validate order - Invalid: Negative quantity
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-modern-200",
+      "quantity": -5
+    }
+  ]
+}
+
+### 15. POST validate order - Invalid: Missing required fields
+POST {{baseUrl}}/api/orders/validate
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "platform-modern-200"
+    }
+  ]
+}
