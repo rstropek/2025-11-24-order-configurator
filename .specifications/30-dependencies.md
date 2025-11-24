@@ -1,4 +1,4 @@
-The current application stores categories, category properties, and products in an SQLite database. See the following relevant files:
+The current application stores categories, category properties, and products in a SQLite database. See the following relevant files:
 
 * `/app/lib/core/products.ts`
 * `/app/lib/core/sampleData.ts`

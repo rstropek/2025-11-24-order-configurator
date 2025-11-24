@@ -56,6 +56,7 @@ export function importProducts(
           name: prod.name,
           categoryId: prod.categoryId,
           properties: prod.properties,
+          dependencies: prod.dependencies ?? null,
         }))
       ).run();
     }

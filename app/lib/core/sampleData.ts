@@ -96,7 +96,33 @@ export const products: Product[] = [
             lengthCm: 200,
             maxLoadKg: 500,
             isOutdoorRated: true,
-        }
+        },
+        dependencies: [
+            {
+                // Requires at least 4 clamps
+                categoryId: "clamp",
+                minCount: 4,
+                propertyConstraints: [
+                    {
+                        key: "sizeCm",
+                        kind: "number",
+                        min: 8, // Clamps must be at least 8cm
+                    },
+                ],
+            },
+            {
+                // Requires 1 controller
+                categoryId: "controller",
+                minCount: 1,
+                propertyConstraints: [
+                    {
+                        key: "maxChannels",
+                        kind: "number",
+                        min: 4, // Controller must support at least 4 channels
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "platform-compact-120",
@@ -106,7 +132,26 @@ export const products: Product[] = [
             lengthCm: 120,
             maxLoadKg: 300,
             isOutdoorRated: false,
-        }
+        },
+        dependencies: [
+            {
+                // Requires at least 2 clamps
+                categoryId: "clamp",
+                minCount: 2,
+                propertyConstraints: [
+                    {
+                        key: "sizeCm",
+                        kind: "number",
+                        min: 5, // Clamps must be at least 5cm
+                    },
+                ],
+            },
+            {
+                // Requires 1 controller
+                categoryId: "controller",
+                minCount: 1,
+            },
+        ],
     },
 
     {
@@ -117,7 +162,21 @@ export const products: Product[] = [
             sizeCm: 10,
             maxTorqueNm: 50,
             isAutomatic: true,
-        }
+        },
+        dependencies: [
+            {
+                // Automatic clamps require a controller that supports them
+                categoryId: "controller",
+                minCount: 1,
+                propertyConstraints: [
+                    {
+                        key: "supportsAutomaticClamps",
+                        kind: "boolean",
+                        value: true,
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "clamp-manual-5",
@@ -140,7 +199,7 @@ export const products: Product[] = [
             supportsAutomaticClamps: false,
             hasBatteryBackup: false,
         },
-        // Controllers typically have no dependencies
+        // Controllers have no dependencies
     },
     {
         id: "controller-pro-8",
@@ -151,7 +210,7 @@ export const products: Product[] = [
             supportsAutomaticClamps: true,
             hasBatteryBackup: true,
         },
-        // Pro controller has no dependencies
+        // Controllers have no dependencies
     },
 ];
 

@@ -20,11 +20,30 @@ export type CategoryDefinition = {
     properties: PropertyDefinition[];
 };
 
+export type PropertyConstraint = {
+    key: string;
+    kind: PropertyKind;
+    // For number properties
+    min?: number;
+    max?: number;
+    // For boolean properties
+    value?: boolean;
+    // For enum properties
+    enumValues?: string[];
+};
+
+export type ProductDependency = {
+    categoryId: string;
+    minCount: number;
+    propertyConstraints?: PropertyConstraint[];
+};
+
 export type Product = {
     id: string;
     name: string;
     categoryId: string;
     properties: Record<string, unknown>;
+    dependencies?: ProductDependency[];
 };
 
 export function buildZodSchemaForCategory(cat: CategoryDefinition): z.ZodObject {

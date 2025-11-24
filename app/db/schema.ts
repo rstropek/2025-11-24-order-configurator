@@ -26,4 +26,16 @@ export const products = sqliteTable("products", {
   name: text("name").notNull(),
   categoryId: text("category_id").notNull().references(() => categories.id, { onDelete: "cascade" }),
   properties: text("properties", { mode: "json" }).notNull().$type<Record<string, unknown>>(),
+  dependencies: text("dependencies", { mode: "json" }).$type<Array<{
+    categoryId: string;
+    minCount: number;
+    propertyConstraints?: Array<{
+      key: string;
+      kind: string;
+      min?: number;
+      max?: number;
+      value?: boolean;
+      enumValues?: string[];
+    }>
+  }>>(),
 });
