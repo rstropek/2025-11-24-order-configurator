@@ -14,6 +14,11 @@ export default function TopMenu() {
               Products
             </Link>
           </li>
+          <li>
+            <Link href="/ordering" className={styles.menuItem}>
+              Ordering
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
