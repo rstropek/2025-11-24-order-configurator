@@ -195,3 +195,98 @@ Content-Type: application/json
     }
   ]
 }
+
+### 16. POST search products - All products in Platform category
+POST {{baseUrl}}/api/products/search
+Content-Type: application/json
+
+{
+  "categoryId": "platform"
+}
+
+### 17. POST search products - Platforms with sizeCm >= 150
+POST {{baseUrl}}/api/products/search
+Content-Type: application/json
+
+{
+  "categoryId": "platform",
+  "propertyConstraints": [
+    {
+      "key": "lengthCm",
+      "kind": "number",
+      "min": 250
+    }
+  ]
+}
+
+### 18. POST search products - Clamps with loadCapacityKg between 8 and 12
+POST {{baseUrl}}/api/products/search
+Content-Type: application/json
+
+{
+  "categoryId": "clamp",
+  "propertyConstraints": [
+    {
+      "key": "loadCapacityKg",
+      "kind": "number",
+      "min": 8,
+      "max": 12
+    }
+  ]
+}
+
+### 19. POST search products - Controllers with autoAdjust = true
+POST {{baseUrl}}/api/products/search
+Content-Type: application/json
+
+{
+  "categoryId": "controller",
+  "propertyConstraints": [
+    {
+      "key": "autoAdjust",
+      "kind": "boolean",
+      "value": true
+    }
+  ]
+}
+
+### 20. POST search products - Clamps with mountType = wall or ceiling
+POST {{baseUrl}}/api/products/search
+Content-Type: application/json
+
+{
+  "categoryId": "clamp",
+  "propertyConstraints": [
+    {
+      "key": "mountType",
+      "kind": "enum",
+      "enumValues": ["wall", "ceiling"]
+    }
+  ]
+}
+
+### 21. POST search products - All products (no filters)
+POST {{baseUrl}}/api/products/search
+Content-Type: application/json
+
+{}
+
+### 22. POST search products - Multiple constraints (AutoClamps with loadCapacityKg >= 10)
+POST {{baseUrl}}/api/products/search
+Content-Type: application/json
+
+{
+  "categoryId": "clamp",
+  "propertyConstraints": [
+    {
+      "key": "loadCapacityKg",
+      "kind": "number",
+      "min": 10
+    },
+    {
+      "key": "autoAdjust",
+      "kind": "boolean",
+      "value": true
+    }
+  ]
+}
